@@ -4,6 +4,9 @@
   "type": "modern-tree-sitter",
   "parser": "tree-sitter-make",
   "injectionRegex": "^(make|makefile)$",
+  // Matches the TextMate grammar's shebang rule, which would otherwise win by
+  // 0.5 against the 0.1 that prefers Tree-sitter.
+  "firstLineRegex": ["^#!\\s*/.*\\bmake\\s+-f", "vim\\b.*\\bset\\b.*\\b(filetype|ft|syntax)=make"],
   "fileTypes": [
     "Makefile",
     "makefile",
