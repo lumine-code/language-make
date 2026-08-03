@@ -1,0 +1,30 @@
+{
+  "name": "MAKE",
+  "scopeName": "source.makefile",
+  "type": "modern-tree-sitter",
+  "parser": "tree-sitter-make",
+  "injectionRegex": "^(make|makefile)$",
+  "fileTypes": [
+    "Makefile",
+    "makefile",
+    "BSDmakefile",
+    "GNUmakefile",
+    "OCamlMakefile",
+    "Kbuild",
+    "am",
+    "mak",
+    "make",
+    "mf",
+    "mk",
+    "mkfile"
+  ],
+  "comments": {
+    "start": "# "
+  },
+  "treeSitter": {
+    "parserSource": "github:alemuller/tree-sitter-make#a4b9187417d6be349ee5fd4b6e77b4172c6827dd",
+    "wasmBuildTool": "tree-sitter-cli#v0.26.11",
+    "grammar": "tree-sitter-make/tree-sitter-make.wasm",
+    "highlightsQuery": "tree-sitter-make/highlights.scm"
+  }
+}
