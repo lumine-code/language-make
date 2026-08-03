@@ -14,14 +14,14 @@ describe("Makefile grammar selection", () => {
     const grammar = atom.grammars.selectGrammar("Makefile", "#!/usr/bin/make -f\nall:\n\techo\n");
 
     expect(grammar.scopeName).toBe("source.makefile");
-    expect(grammar.constructor.name).toBe("WASMTreeSitterGrammar");
+    expect(grammar.constructor.name).toBe("TreeSitterGrammar");
   });
 
   it("prefers the Tree-sitter grammar for an ordinary makefile", () => {
     const grammar = atom.grammars.selectGrammar("Makefile", "all:\n\techo\n");
 
     expect(grammar.scopeName).toBe("source.makefile");
-    expect(grammar.constructor.name).toBe("WASMTreeSitterGrammar");
+    expect(grammar.constructor.name).toBe("TreeSitterGrammar");
   });
 
   it("still honours the TextMate preference", () => {

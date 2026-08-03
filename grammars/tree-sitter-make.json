@@ -1,7 +1,7 @@
 {
   "name": "MAKE",
   "scopeName": "source.makefile",
-  "type": "modern-tree-sitter",
+  "type": "tree-sitter",
   "parser": "tree-sitter-make",
   "injectionRegex": "^(make|makefile)$",
   // Matches the TextMate grammar's shebang rule, which would otherwise win by
