@@ -16,6 +16,11 @@
   },
   "repository": "https://github.com/lumine-code/language-make",
   "license": "MIT",
+  "files": [
+    "grammars",
+    "settings",
+    "spec"
+  ],
   "bugs": {
     "url": "https://github.com/lumine-code/language-make/issues"
   },
