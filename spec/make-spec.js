@@ -9,10 +9,10 @@ describe("Makefile grammar", () => {
     // This suite tests the TextMate grammar. Once the package also ships a
     // Tree-sitter one, grammarForScopeName returns that instead under the
     // default setting, and every tokenizeLine assertion below would break.
-    atom.config.set("language.useTreeSitterParsers", false);
-    waitsForPromise(() => atom.packages.activatePackage("language-make"));
+    lumine.config.set("language.useTreeSitterParsers", false);
+    waitsForPromise(() => lumine.packages.activatePackage("language-make"));
 
-    runs(() => (grammar = atom.grammars.grammarForScopeName("source.makefile")));
+    runs(() => (grammar = lumine.grammars.grammarForScopeName("source.makefile")));
   });
 
   it("parses the grammar", () => {
@@ -21,7 +21,7 @@ describe("Makefile grammar", () => {
   });
 
   it("selects the Makefile grammar for files that start with a hashbang make -f command", () =>
-    expect(atom.grammars.selectGrammar("", "#!/usr/bin/make -f")).toBe(grammar));
+    expect(lumine.grammars.selectGrammar("", "#!/usr/bin/make -f")).toBe(grammar));
 
   it("parses comments correctly", () => {
     let lines = grammar.tokenizeLines("#foo\n\t#bar\n#foo\\\nbar");
@@ -108,7 +108,7 @@ describe("Makefile grammar", () => {
   });
 
   it("parses recipes", () => {
-    waitsForPromise(() => atom.packages.activatePackage("language-shellscript"));
+    waitsForPromise(() => lumine.packages.activatePackage("language-shellscript"));
 
     runs(() => {
       const lines = grammar.tokenizeLines("all: foo.bar\n\ttest\n\nclean: foo\n\trm -fr foo.bar");
@@ -239,7 +239,7 @@ describe("Makefile grammar", () => {
   });
 
   it("continues matching prerequisites after reaching a line continuation character", () => {
-    waitsForPromise(() => atom.packages.activatePackage("language-shellscript"));
+    waitsForPromise(() => lumine.packages.activatePackage("language-shellscript"));
 
     runs(() => {
       const lines = grammar.tokenizeLines('hello: a b c \\\n d e f\n\techo "test"');
@@ -274,7 +274,7 @@ describe("Makefile grammar", () => {
   });
 
   it("parses nested interpolated strings and function calls correctly", () => {
-    waitsForPromise(() => atom.packages.activatePackage("language-shellscript"));
+    waitsForPromise(() => lumine.packages.activatePackage("language-shellscript"));
 
     runs(() => {
       const lines = grammar.tokenizeLines(
@@ -439,7 +439,7 @@ describe("Makefile grammar", () => {
   });
 
   it("parses `origin` correctly", () => {
-    waitsForPromise(() => atom.packages.activatePackage("language-shellscript"));
+    waitsForPromise(() => lumine.packages.activatePackage("language-shellscript"));
 
     runs(() => {
       const lines = grammar.tokenizeLines("default:\n\t$(origin 1)");
@@ -490,7 +490,7 @@ describe("Makefile grammar", () => {
   });
 
   it("parses `flavor` correctly", () => {
-    waitsForPromise(() => atom.packages.activatePackage("language-shellscript"));
+    waitsForPromise(() => lumine.packages.activatePackage("language-shellscript"));
 
     runs(() => {
       const lines = grammar.tokenizeLines("default:\n\t$(flavor 1)");

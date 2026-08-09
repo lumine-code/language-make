@@ -6,28 +6,28 @@
 
 describe("Makefile grammar selection", () => {
   beforeEach(async () => {
-    await atom.packages.activatePackage("language-make");
-    atom.config.set("language.useTreeSitterParsers", true);
+    await lumine.packages.activatePackage("language-make");
+    lumine.config.set("language.useTreeSitterParsers", true);
   });
 
   it("prefers the Tree-sitter grammar for a make shebang", () => {
-    const grammar = atom.grammars.selectGrammar("Makefile", "#!/usr/bin/make -f\nall:\n\techo\n");
+    const grammar = lumine.grammars.selectGrammar("Makefile", "#!/usr/bin/make -f\nall:\n\techo\n");
 
     expect(grammar.scopeName).toBe("source.makefile");
     expect(grammar.constructor.name).toBe("TreeSitterGrammar");
   });
 
   it("prefers the Tree-sitter grammar for an ordinary makefile", () => {
-    const grammar = atom.grammars.selectGrammar("Makefile", "all:\n\techo\n");
+    const grammar = lumine.grammars.selectGrammar("Makefile", "all:\n\techo\n");
 
     expect(grammar.scopeName).toBe("source.makefile");
     expect(grammar.constructor.name).toBe("TreeSitterGrammar");
   });
 
   it("still honours the TextMate preference", () => {
-    atom.config.set("language.useTreeSitterParsers", false);
+    lumine.config.set("language.useTreeSitterParsers", false);
 
-    const grammar = atom.grammars.selectGrammar("Makefile", "#!/usr/bin/make -f\nall:\n");
+    const grammar = lumine.grammars.selectGrammar("Makefile", "#!/usr/bin/make -f\nall:\n");
 
     expect(grammar.scopeName).toBe("source.makefile");
     expect(grammar.constructor.name).toBe("Grammar");

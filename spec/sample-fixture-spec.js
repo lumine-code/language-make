@@ -7,12 +7,12 @@ const path = require("path");
 
 describe("Makefile sample fixtures", () => {
   beforeEach(async () => {
-    await atom.packages.activatePackage("language-make");
-    atom.config.set("language.useTreeSitterParsers", true);
+    await lumine.packages.activatePackage("language-make");
+    lumine.config.set("language.useTreeSitterParsers", true);
   });
 
   it("parses Makefile without error", async () => {
-    const editor = await atom.workspace.open(path.join(__dirname, "fixtures", "Makefile"));
+    const editor = await lumine.workspace.open(path.join(__dirname, "fixtures", "Makefile"));
     const languageMode = editor.getBuffer().getLanguageMode();
     await languageMode.ready;
 
