@@ -5,14 +5,14 @@
 describe("Makefile grammar", () => {
   let grammar = null;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // This suite tests the TextMate grammar. Once the package also ships a
     // Tree-sitter one, grammarForScopeName returns that instead under the
     // default setting, and every tokenizeLine assertion below would break.
     lumine.config.set("language.useTreeSitterParsers", false);
-    waitsForPromise(() => lumine.packages.activatePackage("language-make"));
+    await lumine.packages.activatePackage("language-make");
 
-    runs(() => (grammar = lumine.grammars.grammarForScopeName("source.makefile")));
+    grammar = lumine.grammars.grammarForScopeName("source.makefile");
   });
 
   it("parses the grammar", () => {
@@ -107,27 +107,25 @@ describe("Makefile grammar", () => {
     expect(lines[2][0]).toEqual({ value: "not a comment", scopes: ["source.makefile"] });
   });
 
-  it("parses recipes", () => {
-    waitsForPromise(() => lumine.packages.activatePackage("language-shellscript"));
+  it("parses recipes", async () => {
+    await lumine.packages.activatePackage("language-shellscript");
 
-    runs(() => {
-      const lines = grammar.tokenizeLines("all: foo.bar\n\ttest\n\nclean: foo\n\trm -fr foo.bar");
-      expect(lines[0][0]).toEqual({
-        value: "all",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "entity.name.function.target.makefile",
-        ],
-      });
-      expect(lines[3][0]).toEqual({
-        value: "clean",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "entity.name.function.target.makefile",
-        ],
-      });
+    const lines = grammar.tokenizeLines("all: foo.bar\n\ttest\n\nclean: foo\n\trm -fr foo.bar");
+    expect(lines[0][0]).toEqual({
+      value: "all",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "entity.name.function.target.makefile",
+      ],
+    });
+    expect(lines[3][0]).toEqual({
+      value: "clean",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "entity.name.function.target.makefile",
+      ],
     });
   });
 
@@ -238,188 +236,184 @@ describe("Makefile grammar", () => {
     });
   });
 
-  it("continues matching prerequisites after reaching a line continuation character", () => {
-    waitsForPromise(() => lumine.packages.activatePackage("language-shellscript"));
+  it("continues matching prerequisites after reaching a line continuation character", async () => {
+    await lumine.packages.activatePackage("language-shellscript");
 
-    runs(() => {
-      const lines = grammar.tokenizeLines('hello: a b c \\\n d e f\n\techo "test"');
+    const lines = grammar.tokenizeLines('hello: a b c \\\n d e f\n\techo "test"');
 
-      expect(lines[0][3]).toEqual({
-        value: "\\",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.prerequisites.makefile",
-          "constant.character.escape.continuation.makefile",
-        ],
-      });
-      expect(lines[1][0]).toEqual({
-        value: " d e f",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.prerequisites.makefile",
-        ],
-      });
-      expect(lines[2][1]).toEqual({
-        value: "echo",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "support.function.builtin.shell",
-        ],
-      });
+    expect(lines[0][3]).toEqual({
+      value: "\\",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.prerequisites.makefile",
+        "constant.character.escape.continuation.makefile",
+      ],
+    });
+    expect(lines[1][0]).toEqual({
+      value: " d e f",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.prerequisites.makefile",
+      ],
+    });
+    expect(lines[2][1]).toEqual({
+      value: "echo",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "support.function.builtin.shell",
+      ],
     });
   });
 
-  it("parses nested interpolated strings and function calls correctly", () => {
-    waitsForPromise(() => lumine.packages.activatePackage("language-shellscript"));
+  it("parses nested interpolated strings and function calls correctly", async () => {
+    await lumine.packages.activatePackage("language-shellscript");
 
-    runs(() => {
-      const lines = grammar.tokenizeLines(
-        'default:\n\t$(eval MESSAGE=$(shell node -pe "decodeURIComponent(process.argv.pop())" "${MSG}"))',
-      );
+    const lines = grammar.tokenizeLines(
+      'default:\n\t$(eval MESSAGE=$(shell node -pe "decodeURIComponent(process.argv.pop())" "${MSG}"))',
+    );
 
-      expect(lines[1][1]).toEqual({
-        value: "$(",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "punctuation.definition.variable.makefile",
-        ],
-      });
-      expect(lines[1][2]).toEqual({
-        value: "eval",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "support.function.eval.makefile",
-        ],
-      });
-      expect(lines[1][5]).toEqual({
-        value: "$(",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "string.interpolated.makefile",
-          "punctuation.definition.variable.makefile",
-        ],
-      });
-      expect(lines[1][6]).toEqual({
-        value: "shell",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "support.function.shell.makefile",
-        ],
-      });
-      expect(lines[1][9]).toEqual({
-        value: '"',
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "string.quoted.double.shell",
-          "punctuation.definition.string.begin.shell",
-        ],
-      });
-      expect(lines[1][10]).toEqual({
-        value: "decodeURIComponent(process.argv.pop())",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "string.quoted.double.shell",
-        ],
-      });
-      expect(lines[1][11]).toEqual({
-        value: '"',
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "string.quoted.double.shell",
-          "punctuation.definition.string.end.shell",
-        ],
-      });
-      expect(lines[1][14]).toEqual({
-        value: "${",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "string.quoted.double.shell",
-          "variable.other.bracket.shell",
-          "punctuation.definition.variable.shell",
-        ],
-      });
-      expect(lines[1][16]).toEqual({
-        value: "}",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "string.quoted.double.shell",
-          "variable.other.bracket.shell",
-          "punctuation.definition.variable.shell",
-        ],
-      });
-      expect(lines[1][18]).toEqual({
-        value: ")",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "string.interpolated.makefile",
-          "punctuation.definition.variable.makefile",
-        ],
-      });
-      expect(lines[1][19]).toEqual({
-        value: ")",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "punctuation.definition.variable.makefile",
-        ],
-      });
+    expect(lines[1][1]).toEqual({
+      value: "$(",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "punctuation.definition.variable.makefile",
+      ],
+    });
+    expect(lines[1][2]).toEqual({
+      value: "eval",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "support.function.eval.makefile",
+      ],
+    });
+    expect(lines[1][5]).toEqual({
+      value: "$(",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "string.interpolated.makefile",
+        "punctuation.definition.variable.makefile",
+      ],
+    });
+    expect(lines[1][6]).toEqual({
+      value: "shell",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "support.function.shell.makefile",
+      ],
+    });
+    expect(lines[1][9]).toEqual({
+      value: '"',
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "string.quoted.double.shell",
+        "punctuation.definition.string.begin.shell",
+      ],
+    });
+    expect(lines[1][10]).toEqual({
+      value: "decodeURIComponent(process.argv.pop())",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "string.quoted.double.shell",
+      ],
+    });
+    expect(lines[1][11]).toEqual({
+      value: '"',
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "string.quoted.double.shell",
+        "punctuation.definition.string.end.shell",
+      ],
+    });
+    expect(lines[1][14]).toEqual({
+      value: "${",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "string.quoted.double.shell",
+        "variable.other.bracket.shell",
+        "punctuation.definition.variable.shell",
+      ],
+    });
+    expect(lines[1][16]).toEqual({
+      value: "}",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "string.quoted.double.shell",
+        "variable.other.bracket.shell",
+        "punctuation.definition.variable.shell",
+      ],
+    });
+    expect(lines[1][18]).toEqual({
+      value: ")",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "string.interpolated.makefile",
+        "punctuation.definition.variable.makefile",
+      ],
+    });
+    expect(lines[1][19]).toEqual({
+      value: ")",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "punctuation.definition.variable.makefile",
+      ],
     });
   });
 
@@ -438,105 +432,101 @@ describe("Makefile grammar", () => {
     });
   });
 
-  it("parses `origin` correctly", () => {
-    waitsForPromise(() => lumine.packages.activatePackage("language-shellscript"));
+  it("parses `origin` correctly", async () => {
+    await lumine.packages.activatePackage("language-shellscript");
 
-    runs(() => {
-      const lines = grammar.tokenizeLines("default:\n\t$(origin 1)");
+    const lines = grammar.tokenizeLines("default:\n\t$(origin 1)");
 
-      expect(lines[1][1]).toEqual({
-        value: "$(",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "punctuation.definition.variable.makefile",
-        ],
-      });
-      expect(lines[1][2]).toEqual({
-        value: "origin",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "support.function.origin.makefile",
-        ],
-      });
-      expect(lines[1][4]).toEqual({
-        value: "1",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "variable.other.makefile",
-        ],
-      });
-      expect(lines[1][5]).toEqual({
-        value: ")",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "punctuation.definition.variable.makefile",
-        ],
-      });
+    expect(lines[1][1]).toEqual({
+      value: "$(",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "punctuation.definition.variable.makefile",
+      ],
+    });
+    expect(lines[1][2]).toEqual({
+      value: "origin",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "support.function.origin.makefile",
+      ],
+    });
+    expect(lines[1][4]).toEqual({
+      value: "1",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "variable.other.makefile",
+      ],
+    });
+    expect(lines[1][5]).toEqual({
+      value: ")",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "punctuation.definition.variable.makefile",
+      ],
     });
   });
 
-  it("parses `flavor` correctly", () => {
-    waitsForPromise(() => lumine.packages.activatePackage("language-shellscript"));
+  it("parses `flavor` correctly", async () => {
+    await lumine.packages.activatePackage("language-shellscript");
 
-    runs(() => {
-      const lines = grammar.tokenizeLines("default:\n\t$(flavor 1)");
+    const lines = grammar.tokenizeLines("default:\n\t$(flavor 1)");
 
-      expect(lines[1][1]).toEqual({
-        value: "$(",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "punctuation.definition.variable.makefile",
-        ],
-      });
-      expect(lines[1][2]).toEqual({
-        value: "flavor",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "support.function.flavor.makefile",
-        ],
-      });
-      expect(lines[1][4]).toEqual({
-        value: "1",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "meta.scope.function-call.makefile",
-          "variable.other.makefile",
-        ],
-      });
-      expect(lines[1][5]).toEqual({
-        value: ")",
-        scopes: [
-          "source.makefile",
-          "meta.scope.target.makefile",
-          "meta.scope.recipe.makefile",
-          "string.interpolated.makefile",
-          "punctuation.definition.variable.makefile",
-        ],
-      });
+    expect(lines[1][1]).toEqual({
+      value: "$(",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "punctuation.definition.variable.makefile",
+      ],
+    });
+    expect(lines[1][2]).toEqual({
+      value: "flavor",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "support.function.flavor.makefile",
+      ],
+    });
+    expect(lines[1][4]).toEqual({
+      value: "1",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "meta.scope.function-call.makefile",
+        "variable.other.makefile",
+      ],
+    });
+    expect(lines[1][5]).toEqual({
+      value: ")",
+      scopes: [
+        "source.makefile",
+        "meta.scope.target.makefile",
+        "meta.scope.recipe.makefile",
+        "string.interpolated.makefile",
+        "punctuation.definition.variable.makefile",
+      ],
     });
   });
 
