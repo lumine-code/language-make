@@ -9,7 +9,7 @@ Make language support.
 
 ## Installation
 
-To install `language-make` search for _language-make_ in the Install pane of the Lumine settings or run `lumine --install lumine-code/language-make`.
+To install `language-make` search for it in the Install pane of the Lumine settings, or run the command `lumine --install lumine-code/language-make`.
 
 ## Contributing
 
