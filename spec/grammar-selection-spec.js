@@ -7,7 +7,7 @@
 describe("Makefile grammar selection", () => {
   beforeEach(async () => {
     await lumine.packages.activatePackage("language-make");
-    lumine.config.set("language.useTreeSitterParsers", true);
+    lumine.config.set("editor.useTreeSitterParsers", true);
   });
 
   it("prefers the Tree-sitter grammar for a make shebang", () => {
@@ -25,7 +25,7 @@ describe("Makefile grammar selection", () => {
   });
 
   it("still honours the TextMate preference", () => {
-    lumine.config.set("language.useTreeSitterParsers", false);
+    lumine.config.set("editor.useTreeSitterParsers", false);
 
     const grammar = lumine.grammars.selectGrammar("Makefile", "#!/usr/bin/make -f\nall:\n");
 
