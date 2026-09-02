@@ -4,7 +4,7 @@ Make language support.
 
 ## Features
 
-- **Grammars**: provides Tree-sitter grammars built from [tree-sitter-make](https://github.com/alemuller/tree-sitter-make) and TextMate grammars derived from [atom/language-make](https://github.com/atom/language-make).
+- **Grammars**: provides a Tree-sitter grammar built from [tree-sitter-make](https://github.com/alemuller/tree-sitter-make).
 - **Syntax highlighting**: full grammar coverage for Makefiles.
 
 ## Installation

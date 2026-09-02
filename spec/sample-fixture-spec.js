@@ -8,7 +8,6 @@ const path = require("path");
 describe("Makefile sample fixtures", () => {
   beforeEach(async () => {
     await lumine.packages.activatePackage("language-make");
-    lumine.config.set("editor.useTreeSitterParsers", true);
   });
 
   it("parses Makefile without error", async () => {

@@ -3,9 +3,8 @@
   "scopeName": "source.makefile",
   "type": "tree-sitter",
   "parser": "tree-sitter-make",
-  "injectionRegex": "^(make|makefile)$",
-  // Matches the TextMate grammar's shebang rule, which would otherwise win by
-  // 0.5 against the 0.1 that prefers Tree-sitter.
+  "injectionNames": ["make", "makefile"],
+  // Recognizes executable makefiles and editor modelines.
   "firstLineRegex": ["^#!\\s*/.*\\bmake\\s+-f", "vim\\b.*\\bset\\b.*\\b(filetype|ft|syntax)=make"],
   "fileTypes": [
     "Makefile",
@@ -19,7 +18,11 @@
     "make",
     "mf",
     "mk",
-    "mkfile"
+    "mkfile",
+    "Makefile.in",
+    "imk",
+    "Makefile.cmake",
+    "Makefile2"
   ],
   "comments": {
     "start": "# "
@@ -27,7 +30,7 @@
   "treeSitter": {
     "parserSource": "github:alemuller/tree-sitter-make#a4b9187417d6be349ee5fd4b6e77b4172c6827dd",
     "wasmBuildTool": "tree-sitter-cli#v0.26.13",
-    "grammar": "tree-sitter-make/tree-sitter-make.wasm",
-    "highlightsQuery": "tree-sitter-make/highlights.scm"
+    "grammar": "make.wasm",
+    "highlightsQuery": "make-highlights.scm"
   }
 }
