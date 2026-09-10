@@ -124,7 +124,8 @@
 (variable_reference
   (word) @constant.other.make)
 
-(comment) @comment.line.make
+((comment) @comment.line.make
+  (#set! adjust.endBeforeFirstMatchOf "\\r?$"))
 
 ((word) @_IGNORE_.clean @string.quoted.double.regex.make
  (#match? @_IGNORE_.clean "[%\*\?]"))
@@ -170,4 +171,3 @@
 (targets
   (word) @entity.name.function.preprocessor.make
   (#match? @entity.name.function.preprocessor.make "^\.(PHONY|SUFFIXES|DEFAULT|PRECIOUS|INTERMEDIATE|SECONDARY|SECONDEXPANSION|DELETE_ON_ERROR|IGNORE|LOW_RESOLUTION_TIME|SILENT|EXPORT_ALL_VARIABLES|NOTPARALLEL|ONESHELL|POSIX)$"))
-
