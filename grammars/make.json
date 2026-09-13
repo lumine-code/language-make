@@ -3,7 +3,7 @@
   "scopeName": "source.makefile",
   "type": "tree-sitter",
   "parser": "tree-sitter-make",
-  "injectionNames": ["make", "makefile"],
+  "injectionNames": ["make", "makefile", "bsdmake", "mf"],
   // Recognizes executable makefiles and editor modelines.
   "firstLineRegex": ["^#!\\s*/.*\\bmake\\s+-f", "vim\\b.*\\bset\\b.*\\b(filetype|ft|syntax)=make"],
   "fileTypes": [
