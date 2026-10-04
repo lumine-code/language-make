@@ -36,6 +36,7 @@
     "parserSource": "github:alemuller/tree-sitter-make#a4b9187417d6be349ee5fd4b6e77b4172c6827dd",
     "wasmBuildTool": "tree-sitter-cli#v0.27.0",
     "grammar": "make.wasm",
+    "tagsQuery": "make-tags.scm",
     "highlightsQuery": "make-highlights.scm"
   }
 }

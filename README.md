@@ -5,6 +5,7 @@ Make language support.
 ## Features
 
 - **Grammars**: provides a Tree-sitter grammar built from [tree-sitter-make](https://github.com/alemuller/tree-sitter-make).
+- **Symbols**: literal targets, variables and named multiline definitions.
 - **Syntax highlighting**: full grammar coverage for Makefiles.
 
 ## Installation

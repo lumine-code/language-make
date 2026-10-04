@@ -1,0 +1,24 @@
+{
+  "source.makefile": {
+    "text": "OUTPUT = app\nall build: input\n\t@echo $(OUTPUT)\ndefine greet\nhello\nendef\n# phantom: ignored\n",
+    "symbols": [
+      {
+        "name": "OUTPUT",
+        "tag": "variable"
+      },
+      {
+        "name": "all",
+        "tag": "target"
+      },
+      {
+        "name": "build",
+        "tag": "target"
+      },
+      {
+        "name": "greet",
+        "tag": "function"
+      }
+    ],
+    "absent": ["Phantom", "phantom", "input"]
+  }
+}
