@@ -2,6 +2,8 @@
 
 Make language support.
 
+Fork of [pulsar-edit/pulsar](https://github.com/pulsar-edit/pulsar) (`packages/language-make`).
+
 ## Features
 
 - **Grammars**: provides a Tree-sitter grammar built from [tree-sitter-make](https://github.com/alemuller/tree-sitter-make).
