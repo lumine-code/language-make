@@ -1,0 +1,16 @@
+{
+  "title": "language-make",
+  "description": "MAKE syntax highlighting in the editor.",
+  "recordedOn": "2026-10-13",
+  "sourceRevision": "db1d1ce0f99c1125073da05dd702d0b52ab57f31",
+  "mode": "normal",
+  "fontSettings": "default",
+  "images": [
+    {
+      "file": "demo.png",
+      "label": "MAKE syntax highlighting at the default editor font size.",
+      "width": 1100,
+      "height": 820
+    }
+  ]
+}
