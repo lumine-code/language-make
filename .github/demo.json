@@ -1,16 +1,61 @@
 {
   "title": "language-make",
-  "description": "MAKE syntax highlighting in the editor.",
-  "recordedOn": "2026-10-13",
-  "sourceRevision": "db1d1ce0f99c1125073da05dd702d0b52ab57f31",
+  "description": "MAKE syntax highlighting at the default editor font size.",
+  "recordedOn": "2026-10-14",
+  "sourceRevision": "c685451fcd27f3d2a83e27815e5b1445d5bc4c80",
+  "themeSourceRevision": "14a69683b0e3238e2bc128fbfae3866c1e4ee9c6",
   "mode": "normal",
   "fontSettings": "default",
+  "scenario": "demo.js",
+  "recipeHash": "89a9090a36f3f82866a4563afdbbcc0ac67d18e90e334e75b873425be6acea65",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "electron": "44.7.0",
+    "chrome": "152.0.7977.130",
+    "devicePixelRatio": 1,
+    "locale": "en-GB",
+    "fontFamily": "Fira Code, Menlo, DejaVu Sans Mono, Consolas, monospace",
+    "fontSize": 14,
+    "themes": ["one-day-syntax", "one-day-ui"]
+  },
+  "viewport": { "width": 1100, "height": 820 },
+  "cornerRadius": 10,
+  "sources": {
+    "editor": {
+      "revision": "c4d7a05fe6960ae6fb041981d6cf13e9c0286b17",
+      "dirty": true,
+      "workingTreeHash": "c8c1ecbfffafd0d4ca1f3ef718222e809b0d3f3aabe3d890d222f58976eb8817"
+    },
+    "package": {
+      "revision": "c685451fcd27f3d2a83e27815e5b1445d5bc4c80",
+      "dirty": true,
+      "workingTreeHash": "b7169e88f31ece386f232d76b607d150826bb4641ac4688ef03ddbee59c96678"
+    },
+    "language-make": {
+      "revision": "c685451fcd27f3d2a83e27815e5b1445d5bc4c80",
+      "dirty": true,
+      "workingTreeHash": "b7169e88f31ece386f232d76b607d150826bb4641ac4688ef03ddbee59c96678"
+    },
+    "one-theme": {
+      "revision": "14a69683b0e3238e2bc128fbfae3866c1e4ee9c6",
+      "dirty": true,
+      "workingTreeHash": "50ec2f83a6347dd8113870992ec4eb2be4014f3d9e12213c2f51b543f1eca793"
+    }
+  },
+  "fixtures": [
+    {
+      "file": "Makefile",
+      "sha256": "58c43df8bec89946b7fb1d88187cd03d8df3880fffcf328fe82af22884c203f5"
+    }
+  ],
   "images": [
     {
       "file": "demo.png",
       "label": "MAKE syntax highlighting at the default editor font size.",
       "width": 1100,
-      "height": 820
+      "height": 820,
+      "sha256": "f1b5f5db06357830ef2f2488db2bceb36a6a0731c6a1e92d8c502750ee5ba391"
     }
   ]
 }
