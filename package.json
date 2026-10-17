@@ -19,7 +19,8 @@
   "files": [
     "grammars",
     "settings",
-    "spec"
+    "spec",
+    "THIRD_PARTY_NOTICES"
   ],
   "bugs": {
     "url": "https://github.com/lumine-code/language-make/issues"
