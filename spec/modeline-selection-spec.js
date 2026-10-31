@@ -34,6 +34,22 @@ describe("MAKE modeline selection", () => {
           .not.toBe("source.makefile");
   });
 
+  it("accepts a complete alias followed by LF or CRLF without a colon", () => {
+    for (const ending of ["\n", "\r\n"])
+      for (const key of ["filetype", "ft", "syntax"]) {
+        const prefix = "# vim: set " + key + "=";
+        expect(
+          lumine.grammars.selectGrammar("modeline", prefix + "make" + ending + ending + "all:")
+            .scopeName,
+        )
+          .withContext(key + JSON.stringify(ending))
+          .toBe("source.makefile");
+        expect(
+          lumine.grammars.selectGrammar("modeline", prefix + "makeup" + ending).scopeName,
+        ).not.toBe("source.makefile");
+      }
+  });
+
   it("keeps failed modelines from revisiting Vim and set tokens", () => {
     expect(grammar.firstLineRegex.source).toContain("(?:(?!vim\\b).)*vim\\b");
     expect(grammar.firstLineRegex.source).toContain("(?:(?!\\bset\\b).)*\\bset\\b");
