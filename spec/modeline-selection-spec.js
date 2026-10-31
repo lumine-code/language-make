@@ -23,6 +23,17 @@ describe("MAKE modeline selection", () => {
     expect(grammar.firstLineRegex.test("preceding line\n// vim: set ft=make:")).toBe(true);
   });
 
+  it("requires a complete Make modeline alias", () => {
+    for (const key of ["filetype", "ft", "syntax"])
+      for (const name of ["makeup", "make-extra", "makefile"])
+        expect(
+          lumine.grammars.selectGrammar("modeline", "# vim: set " + key + "=" + name + ":")
+            .scopeName,
+        )
+          .withContext(name)
+          .not.toBe("source.makefile");
+  });
+
   it("keeps failed modelines from revisiting Vim and set tokens", () => {
     expect(grammar.firstLineRegex.source).toContain("(?:(?!vim\\b).)*vim\\b");
     expect(grammar.firstLineRegex.source).toContain("(?:(?!\\bset\\b).)*\\bset\\b");

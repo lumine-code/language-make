@@ -8,8 +8,8 @@
   // Stop at the first Vim and set tokens instead of backtracking over them.
   // \x0a keeps existing shebang prefix line counts unchanged.
   "firstLineRegex": [
-    "^#!\\s*/.*\\bmake\\s+-f",
-    "(?:^|\\x0a)(?:(?!vim\\b).)*vim\\b(?:(?!\\bset\\b).)*\\bset\\b.*\\b(filetype|ft|syntax)=make"
+    "^#![ \\t]*(?:/[^\\x0d\\x0a \\t]*/make|/[^\\x0d\\x0a \\t]*/env(?:\\.exe)?[ \\t]+(?:-S[ \\t]+)?make)[ \\t]+-f(?=[ \\t\\x0d\\x0a]|$)",
+    "(?:^|\\x0a)(?:(?!vim\\b).)*vim\\b(?:(?!\\bset\\b).)*\\bset\\b.*\\b(filetype|ft|syntax)=make(?=[ \\t:]|$)"
   ],
   "fileTypes": [
     "Makefile",

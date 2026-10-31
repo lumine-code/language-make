@@ -18,4 +18,30 @@ describe("Makefile grammar selection", () => {
     expect(grammar.scopeName).toBe("source.makefile");
     expect(grammar.constructor.name).toBe("TreeSitterGrammar");
   });
+
+  it("recognizes exact Make interpreters in extensionless executables", () => {
+    for (const text of [
+      "#!/usr/bin/make -f",
+      "#!/usr/bin/make -f\r\n",
+      "#!/usr/bin/env make -f",
+      "#!/usr/bin/env -S make -f",
+      "#!/usr/bin/env.exe -S make -f",
+    ])
+      expect(lumine.grammars.selectGrammar("executable", text).scopeName)
+        .withContext(text)
+        .toBe("source.makefile");
+  });
+
+  it("rejects Make names in wrapper names or other interpreter arguments", () => {
+    for (const text of [
+      "#!/usr/bin/not-make -f",
+      "#!/usr/bin/python make -f",
+      "#!/usr/bin/env -S python make -f",
+      "#!/usr/bin/make-wrapper -f",
+      "#!/usr/bin/make -fake",
+    ])
+      expect(lumine.grammars.selectGrammar("executable", text).scopeName)
+        .withContext(text)
+        .not.toBe("source.makefile");
+  });
 });
